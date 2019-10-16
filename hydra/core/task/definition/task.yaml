@@ -1,0 +1,4 @@
+dependency: Optional[List[str]]
+trigger: Optional[List[str]]
+store: Default[str, 1d] 
+plugins: Plugins[dict]

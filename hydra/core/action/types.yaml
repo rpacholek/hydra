@@ -1,0 +1,24 @@
+job:
+  type:
+    - trigger
+    - schedule
+    - execute
+task:
+  type:
+    - create
+    - remove
+    - instanciate
+  create:
+    - user
+    - type
+    - ?time_limit
+    - ?filter
+    - *
+manage:
+  type:
+    - node
+
+timer
+schedule
+event
+

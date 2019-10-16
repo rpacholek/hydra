@@ -1,0 +1,2 @@
+class DummyNodeManager(NodeManager):
+    pass

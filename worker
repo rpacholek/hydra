@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+
+import asyncio
+
+from hydra.worker import Worker
+from hydra.core.common.init import *
+
+async def main():
+    main_object = await init(Worker)
+    await run(main_object)
+
+asyncio.run(main())
+

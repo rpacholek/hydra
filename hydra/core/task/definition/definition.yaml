@@ -1,0 +1,14 @@
+
+header:
+  name: str
+  user: str
+  group: Default[str, "User"]
+  type: Enum[task,maintenance]
+  version: Default[int, 0]
+  type_2: None ## Not allowed
+
+Option[task]: Schema[task]
+Option[job]: Schema[job]
+Option[trigger]: Schema[trigger]
+Option[scheduler]: Schema[scheduler]
+worker: Schema[worker]

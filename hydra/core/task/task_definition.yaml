@@ -1,0 +1,44 @@
+## Inner notion of the task
+header:
+  name: task_name
+  user: name
+  group: name
+  type: task # maintenance
+  version: 0
+
+task:
+  dependency:
+    - task1
+    - task2
+  trigger:
+    - task3
+    - task4
+  store: 0
+
+
+job:
+  deadline: 1h
+  store: 1d
+
+scheduler: ## Info for scheduler
+  labels:
+    - "linux & java"
+  priority: 10
+
+worker:
+  exec: ## Info for worker
+    - plugin_name:
+        param1: 1
+        param2: 2
+    - shell:
+        exec: "bash attachment://filename"
+    - tar:
+        extract: "attachment://filename.tar"
+
+trigger: ## Info for taskdb
+  - cron:
+      schedule: 0 0 * * * *
+  - git:
+      type: pullrequest
+      repo: https://github.com/hydra/hydra
+

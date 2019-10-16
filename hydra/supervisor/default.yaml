@@ -1,0 +1,21 @@
+---
+worker:
+  host: 0.0.0.0
+  port: 4004
+  protocol: AdvancedProtocol
+client:
+  host: 0.0.0.0
+  port: 4003
+  protocol: AdvancedProtocol
+job:
+  type: InMemory
+task:
+  type: InMemory
+scheduler:
+  type: Basic
+action_queue:
+  type: Basic
+protocol:
+  AdvancedProtocol:
+    authenticate:
+      required: false
