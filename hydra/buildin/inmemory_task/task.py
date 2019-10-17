@@ -1,6 +1,7 @@
 from hydra.core.task.task import Task
 from hydra.core.task.taskdb import TaskContainer
 
+
 class InMemoryTask(Task):
     def __init__(self, definition, files=[], version=0, **kwargs):
         super().__init__(definition, files, version, **kwargs)
@@ -11,6 +12,7 @@ class InMemoryTask(Task):
 
     def __load(self):
         return self.definition
+
 
 class InMemoryTaskContainer(TaskContainer):
     def __init__(self, action_queue, **kwargs):
@@ -29,4 +31,3 @@ class InMemoryTaskContainer(TaskContainer):
 
     def create_task(self, *args, **kwargs):
         return InMemoryTask(*args, **kwargs)
-

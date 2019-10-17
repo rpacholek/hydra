@@ -3,9 +3,11 @@ from enum import Enum, auto
 
 from .message import Message
 
+
 class ConnMaster(Enum):
     SERVER = auto()
     CLIENT = auto()
+
 
 class Device:
     def __init__(self, rstream, wstream, conn_type):
@@ -24,6 +26,7 @@ class Device:
 
     def is_alive(self) -> bool:
         return not self.receiver.is_closed()
+
 
 class Receiver:
     def __init__(self, rstream):
@@ -44,12 +47,13 @@ class Receiver:
     def is_closed(self):
         return self.rstream.at_eof()
 
+
 class Sender:
     def __init__(self, wstream):
         self.wstream = wstream
 
     def send(self, message):
-        data = message.dumps() 
+        data = message.dumps()
         # Send stream len
         self.wstream.write("{:<5}".format(len(data)).encode())
         # Send data

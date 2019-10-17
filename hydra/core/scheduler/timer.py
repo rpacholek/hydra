@@ -6,6 +6,7 @@ The timer does not support one time cancelation.
 The timer does notifies the task and it should decide if the task should be performed or ignored.
 """
 
+
 class Timer(ActionExecutor):
     def __init__(self, action_queue):
         ActionExecutor.__init__(self)
@@ -20,11 +21,11 @@ class Timer(ActionExecutor):
         self.schedule_next(taskid)
 
     def launch(self, taskid):
-        #self.action_queue.append()
+        # self.action_queue.append()
         self.schedule_next(taskid)
 
     def schedule_next(self, taskid):
-        nearest_time = min([ c.get_next() for c in self.task_set[taskid] ])
+        nearest_time = min([c.get_next() for c in self.task_set[taskid]])
         self.time_queue.add((nearest_time, taskid))
 
     async def run():

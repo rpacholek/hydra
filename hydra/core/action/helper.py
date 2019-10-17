@@ -8,6 +8,7 @@ class ActionPattern(str):
             return action_cmp(item, self.__str__())
         return False
 
+
 def action_cmp(action_type: str, pattern: str):
     """
     Compares the start of action_type with the pattern
@@ -30,6 +31,6 @@ def action_cmp(action_type: str, pattern: str):
     ! - not operator
     () - group operator
     """
-    
+
     #TODO: Impl
     return action_type.starts_with(pattern)

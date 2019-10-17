@@ -3,6 +3,7 @@ import asyncio
 from .device import Device, ConnMaster
 from ...config import shadow_copy
 
+
 def new_client(manager, conn_type, coromanager=None):
     async def new_client_cb(reader, writer):
         node = manager.create_node(Device(reader, writer, conn_type))
@@ -13,22 +14,24 @@ def new_client(manager, conn_type, coromanager=None):
         await node.run()
     return new_client_cb
 
+
 async def listener(manager, config={}, coromanager=None):
     server_config = shadow_copy(
-            config,
-            requires=["port"],
-            allowed=["host", "timeout"]
-        )
+        config,
+        requires=["port"],
+        allowed=["host", "timeout"]
+    )
     server = await asyncio.start_server(new_client(manager, ConnMaster.SERVER, coromanager), **server_config)
     async with server:
         print("Run server")
         await server.serve_forever()
 
+
 async def connect(manager, config={}, coromanager=None):
     conn_config = shadow_copy(
-            config,
-            requires=["host", "port"],
-        )
+        config,
+        requires=["host", "port"],
+    )
     print(f"Connecting {conn_config}")
     # TODO: host == "discover"
     # TODO: retry, increase timeout
@@ -42,4 +45,3 @@ async def connect(manager, config={}, coromanager=None):
     except ConnectionRefusedError:
         pass
     print("Finish connection")
-

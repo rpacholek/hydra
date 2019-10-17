@@ -3,6 +3,7 @@ from ..exceptions import *
 
 from ....environment import NodeType
 
+
 class PlainAuth:
     def __init__(self):
         pass
@@ -11,6 +12,7 @@ class PlainAuth:
         if user == "user" and password == "password":
             return True
         return False
+
 
 class AuthStatus(enum.Enum):
     Success = 0
@@ -23,8 +25,8 @@ class AuthenticationProtocol(ProtocolStep):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.authetication = {"plain": PlainAuth()}
-        self.local_state = AuthStatus.Init # If remote auth localy
-        self.remote_state = AuthStatus.Init # If local auth remotely
+        self.local_state = AuthStatus.Init  # If remote auth localy
+        self.remote_state = AuthStatus.Init  # If local auth remotely
 
         if self.local_env.get_node_type() == NodeType.Supervisor:
             self.methods = "plain"
@@ -70,7 +72,7 @@ class AuthenticationProtocol(ProtocolStep):
         return ProtocolMessage({
             "stage": "init",
             "methods": self.methods
-            })
+        })
 
     def m_auth_user(self, method):
         return ProtocolMessage({
@@ -78,12 +80,10 @@ class AuthenticationProtocol(ProtocolStep):
             "method": "plain",
             "user": "user",
             "password": "password"
-            })
+        })
 
     def m_auth_result(self, result):
         return ProtocolMessage({
             "stage": "result",
             "authenticated": result
-            })
-
-
+        })

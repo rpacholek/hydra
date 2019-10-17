@@ -1,11 +1,13 @@
 import os.path
 import importlib
 
+
 def install_modules(dirs=[]):
     for dirpath in dirs:
         modules = recursive_file_search(dirpath, "factory.py")
         for module in modules:
             importlib.import_module(module)
+
 
 def recursive_file_search(path, filename):
     paths = []
@@ -22,10 +24,11 @@ def recursive_file_search(path, filename):
                 contains_init = True
                 continue
             elif entry.is_dir():
-                paths += [ f"{entry.name}.{p}" for p in recursive_file_search(entry.path, filename) ]
+                paths += [f"{entry.name}.{p}" for p in recursive_file_search(
+                    entry.path, filename)]
     return paths
+
 
 def get_this():
     import hydra
     return hydra.__file__.rsplit("/", 2)[0]
-

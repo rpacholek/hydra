@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 from ..action.executor import ActionExecutor, action_executor
 
+
 class TaskContainer(ActionExecutor, metaclass=ABCMeta):
     def __init__(self, action_queue, **kwargs):
         ActionExecutor.__init__(self)
@@ -25,4 +26,3 @@ class TaskContainer(ActionExecutor, metaclass=ABCMeta):
     @abstractmethod
     def delete_task(self, taskid):
         pass
-    

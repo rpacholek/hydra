@@ -5,10 +5,12 @@ from ...environment import *
 from ..network.message import Message
 from .message import ProtocolMessage
 
+
 class ProtocolStatus(enum.Enum):
     Success = 0
     Failed = 1
     Waiting = 2
+
 
 class Protocol:
     def __init__(self, info, local_env, remote_env, config):
@@ -39,7 +41,7 @@ class Protocol:
     def receive(self, data):
         if self.stage:
             self.stage.receive(ProtocolMessage().loads(data))
-            
+
             if self.stage.status == ProtocolStatus.Failed:
                 self.error()
             elif self.stage.status == ProtocolStatus.Success:
@@ -58,14 +60,16 @@ class Protocol:
 
     def is_ready(self):
         return self.status == ProtocolStatus.Success
-    
+
     def __next_step(self):
         step = next(self.__step_iter, None)
         if step:
-            self.stage = step(self.send_buffer, self.info, self.local_env, self.remote_env, self.config)
+            self.stage = step(self.send_buffer, self.info,
+                              self.local_env, self.remote_env, self.config)
             self.stage.init()
         else:
             self.status = ProtocolStatus.Success
+
 
 class ProtocolStep:
     def __init__(self, send_buffer, info, local_env, remote_env, config):
@@ -88,7 +92,7 @@ class ProtocolStep:
     def failed(self):
         self.status = ProtocolStatus.Failed
 
+
 class NoConnectionProtocol(ProtocolStep):
     def init(self):
         self.failed()
-

@@ -2,6 +2,7 @@
 # TODO: Use scheduler node
 # TODO: Use scheduler factory for default scheduler
 
+
 class SchedulerManager(ActionExecutor, ActionQueueInterface):
     def __init__(self, action_queue, config=None):
         ActionExecutor.__init__(self)
@@ -9,8 +10,8 @@ class SchedulerManager(ActionExecutor, ActionQueueInterface):
         self.default_scheduler = DefaultScheduler(self)
         self.action_queue = action_queue
         self.action_queue.register(self)
-    
-    ### Action Queue Interface
+
+    # Action Queue Interface
     def push_action(self, action: Action):
         self.action_queue.push_action(action)
 
@@ -24,5 +25,3 @@ class SchedulerManager(ActionExecutor, ActionQueueInterface):
 
     def exec_action(self, action):
         self.active_queue.exec_action(action)
-
-

@@ -4,6 +4,7 @@ from collections import defaultdict
 factory_registery = {}
 awaiting_registery = defaultdict(list)
 
+
 def get_factory_registery():
     for key in list(awaiting_registery.keys()):
         if key in factory_registery:
@@ -11,6 +12,7 @@ def get_factory_registery():
                 factory_registery[key].add_subfactory(awaitcls)
             del awaiting_registery[key]
     return factory_registery
+
 
 class Factory(metaclass=ABCMeta):
     def __init_subclass__(cls, *args, generate=None, **kwargs):
@@ -23,7 +25,7 @@ class Factory(metaclass=ABCMeta):
 
     def __init__(self, config):
         self.basefactory = None
-    
+
     def choose_factory(self):
         if not self.config:
             raise Exception("Config in factory not set")
@@ -60,7 +62,7 @@ class SubFactory(metaclass=ABCMeta):
 
     def __init__(self, config):
         pass
-    
+
     @staticmethod
     @abstractmethod
     def get_name() -> str:

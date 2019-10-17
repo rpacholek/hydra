@@ -3,8 +3,10 @@ from collections import ChainMap
 
 from ..common.serializer import get_serializer
 
+
 def get_default_config(path):
     return os.path.join(os.path.dirname(path), "default.yaml")
+
 
 class Config:
     def __init__(self, Type, config_file=""):
@@ -13,9 +15,8 @@ class Config:
 
         self.default = self.read_config_file(Type.get_default_config())
         self.user_config = self.read_config_file(config_file)
-        
+
         self.config = ChainMap(self.user_config, self.default)
-            
 
     def read_config_file(self, config_file):
         if config_file and os.path.exists(config_file):
@@ -39,6 +40,7 @@ class Config:
     def config_listener(self, notify_func, *keys):
         pass
 
+
 class ShadowConfig:
     # TODO: Expand
     # Insted of config.get("manager") => config.shadow("manager")
@@ -52,6 +54,7 @@ class ShadowConfig:
     def __get__(self, arg):
         return self.config[arg]
 
+
 def shadow_copy(config, requires=[], allowed=[]):
     fields_not_found = []
     for requirement in requires:
@@ -60,5 +63,3 @@ def shadow_copy(config, requires=[], allowed=[]):
     if fields_not_found:
         raise Exception(f"Required fields: {fields_not_found} not in config")
     return {k: config[k] for k in requires + allowed if k in config}
-
-

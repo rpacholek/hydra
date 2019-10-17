@@ -1,6 +1,7 @@
 from ..factory.register_class import Factory
 from .scheduler import Scheduler
 
+
 class SchedulerFactory(Factory, generate=Scheduler):
     registered_subfactories = {}
 
@@ -17,4 +18,3 @@ class SchedulerFactory(Factory, generate=Scheduler):
     @staticmethod
     def get_subfactories():
         return list(SchedulerFactory.registered_subfactories.keys())
-

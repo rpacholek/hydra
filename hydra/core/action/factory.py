@@ -1,6 +1,7 @@
 from ..factory.register_class import Factory
 from .queue import ActionQueue
 
+
 class ActionQueueFactory(Factory, generate=ActionQueue):
     registered_subfactories = {}
 
@@ -17,4 +18,3 @@ class ActionQueueFactory(Factory, generate=ActionQueue):
     @staticmethod
     def get_subfactories():
         return list(ActionQueueFactory.registered_subfactories.keys())
-

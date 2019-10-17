@@ -6,8 +6,10 @@ from abc import ABCMeta, abstractmethod
 from typing import Tuple, Type
 from io import BytesIO
 
+
 class MessageException(Exception):
     pass
+
 
 class Message(metaclass=ABCMeta):
     @abstractmethod
@@ -53,7 +55,7 @@ class Message(metaclass=ABCMeta):
         for key, value in header.items():
             buf.write("{}: {}\r\n".format(key, value).encode())
         buf.write(b"\r\n")
-    
+
     @staticmethod
     def _encode_body(buf, body):
         buf.write(body.encode())
@@ -70,7 +72,7 @@ class Message(metaclass=ABCMeta):
         header = Message._decode_header(header_data)
         body = body.decode()
         attachments = Message._decode_attachments(data)
-        
+
         return header, body, attachments
 
     @staticmethod
@@ -93,6 +95,7 @@ class Message(metaclass=ABCMeta):
     def _decode_attachments(data) -> list:
         return []
 
+
 class MessageProcessor:
     def __init__(self, *message_cls):
         self.message_types = {}
@@ -104,11 +107,9 @@ class MessageProcessor:
 
     def loads(self, data) -> Type[Message]:
         typename, content = Message.process(data)
-        
+
         if typename in self.message_types:
             msg = self.message_types[typename]()
             msg.loads_message(*content)
             return msg
         raise MessageException(f"Unknown message type {typename}")
-
-

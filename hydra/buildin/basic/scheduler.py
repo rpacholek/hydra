@@ -13,7 +13,8 @@ Supports:
     - labels are string based and the label must match exactly
 """
 
-class BasicScheduler(Scheduler): 
+
+class BasicScheduler(Scheduler):
     def __init__(self, action_queue, config=None):
         Scheduler.__init__(self, action_queue, config)
         self.scheduler_queue = asyncio.Queue()
@@ -32,11 +33,11 @@ class BasicScheduler(Scheduler):
 
     def check_label(self, sid):
         pass
-    
+
     def launch(self, sid):
         schedule_item = self.schedule_items[sid]
 
-    ### ActionExecutor
+    # ActionExecutor
     @action_executor("schedule")
     def schedule_action(self, action):
         self.scheduler_queue.put_nowait(action)
@@ -49,7 +50,8 @@ class BasicScheduler(Scheduler):
 class SchedulerStatus(Enum):
     Available = 1
     Busy = 2
-    Dead = 10 
+    Dead = 10
+
 
 class SchedulerDevice:
     def __init__(self, device_id, labels=[]):
@@ -68,6 +70,7 @@ class SchedulerDevice:
 
     def get_id(self):
         return device_id
+
 
 class SchedulerDeviceManager:
     def __init__(self):
@@ -89,6 +92,7 @@ class SchedulerDeviceManager:
             if device.is_available():
                 return device
         return None
+
 
 class SchedulerItem:
     def __init__(self):

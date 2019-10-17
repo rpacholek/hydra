@@ -4,6 +4,7 @@ from collections import defaultdict
 from ...core.action.executor import ActionExecutor, action_executor
 from ...core.action.queue import ActionQueue
 
+
 class BasicActionQueue(ActionExecutor, ActionQueue):
     def __init__(self, config):
         ActionExecutor.__init__(self)
@@ -13,12 +14,12 @@ class BasicActionQueue(ActionExecutor, ActionQueue):
         self.executors = defaultdict(list)
 
         self.register(self)
-    
+
     async def run(self, coromanager=None):
         while True:
             action = await self.get_action()
             self.execute(action)
-    
+
     def execute(self, action):
         for executor in self.get_executors(action.action_type):
             executor.exec_action(action)
@@ -27,24 +28,23 @@ class BasicActionQueue(ActionExecutor, ActionQueue):
         # TODO: hierarchical resolve
         return self.executors.get(action_type, [])
 
-    ### Executor register
+    # Executor register
     def register(self, executor):
         for accepted_action in executor.get_accepted_actions():
             self.executors[accepted_action].append(executor)
 
-    ### Queue methods
+    # Queue methods
     def push_action(self, action):
         self.queue.put_nowait(action)
 
     async def get_action(self):
         return await self.queue.get()
 
-    ### ActionExecutor
+    # ActionExecutor
     @action_executor("config.action")
     def action_config_change(self, action):
         """
         config.action - change in queue policy
         """
-        #TODO
+        # TODO
         pass
-

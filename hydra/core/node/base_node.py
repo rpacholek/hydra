@@ -11,6 +11,7 @@ from ..action.action import Action
 
 NodeStatus = Enum("NodeStatus", "Init Running Paused Stoped Failed Unknown")
 
+
 class Node(ActionExecutor):
     def __init__(self, device, action_queue, config=None, env=None):
         ActionExecutor.__init__(self)
@@ -24,12 +25,12 @@ class Node(ActionExecutor):
         self.local_env = env
         self.remote_env = RemoteEnvironment()
 
-        #TODO: Protocol should be passed via factory 
+        # TODO: Protocol should be passed via factory
         self.protocol = AdvancedProtocol(
-                {"expected_type": self.node_type()}, 
-                self.local_env, 
-                self.remote_env, 
-                self.config)
+            {"expected_type": self.node_type()},
+            self.local_env,
+            self.remote_env,
+            self.config)
 
         self.message_processor = MessageProcessor(Action, ProtocolMessage)
 
@@ -72,7 +73,6 @@ class Node(ActionExecutor):
             data = await self.device.recv()
             self.process(data)
 
-
     def process(self, data):
         if data:
             message = self.message_processor.loads(data)
@@ -84,7 +84,7 @@ class Node(ActionExecutor):
                 print("Unknown message type")
         else:
             pass
-            #Empty data == closed stream?
+            # Empty data == closed stream?
 
     def close(self):
         self.device.close()
@@ -96,16 +96,17 @@ class Node(ActionExecutor):
         )
 
     def is_alive(self):
-        return self.device.is_alive() 
+        return self.device.is_alive()
 
     def node_type(self):
         return NodeType.Undefined
 
-    ## Private functions
-    
-    ### Action helper
+    # Private functions
+
+    # Action helper
     def send(self, action):
         self.device.send(action)
+
 
 """
 Example impl:

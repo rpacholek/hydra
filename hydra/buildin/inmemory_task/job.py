@@ -1,5 +1,6 @@
-from hydra.core.task.job import Job 
+from hydra.core.task.job import Job
 from hydra.core.task.jobdb import JobContainer
+
 
 class InMemoryJob(Job):
     def __init__(self, task_definition, **kwargs):
