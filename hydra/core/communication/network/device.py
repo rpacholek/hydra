@@ -13,8 +13,8 @@ class Device:
         self.sender = Sender(wstream)
         self.conn_type = conn_type
 
-    async def send(self, message: Type[Message]):
-        await self.sender.send(message)
+    def send(self, message: Type[Message]):
+        self.sender.send(message)
 
     async def recv(self):
         return await self.receiver.recv()
@@ -30,12 +30,15 @@ class Receiver:
         self.rstream = rstream
 
     async def recv(self):
-        print("-->Await recv")
         data = None
         data_len = (await self.rstream.read(5)).decode()
-        data_len = int(data_len)
-        data = await self.rstream.read(data_len)
-        print("-->Received")
+        if data_len and set(data_len).issubset(set(" 0123456789")):
+            data_len = int(data_len)
+            data = await self.rstream.read(data_len)
+        elif not data:
+            print("Socket received EOF - closing")
+        else:
+            print("Package not starting with len")
         return data
 
     def is_closed(self):
@@ -45,15 +48,12 @@ class Sender:
     def __init__(self, wstream):
         self.wstream = wstream
 
-    async def send(self, message):
+    def send(self, message):
         data = message.dumps() 
-        print("Sending-->")
-        print(data)
         # Send stream len
         self.wstream.write("{:<5}".format(len(data)).encode())
         # Send data
         self.wstream.write(data)
-        await self.wstream.drain()
 
     async def close(self):
         self.wstream.close()

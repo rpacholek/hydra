@@ -94,11 +94,13 @@ class Message(metaclass=ABCMeta):
         return []
 
 class MessageProcessor:
-    def __init__(self):
+    def __init__(self, *message_cls):
         self.message_types = {}
+        for cls in message_cls:
+            self.register(cls)
 
-    def register(self, message_cls):
-        self.message_types[message_cls.get_message_type()] = message_cls
+    def register(self, message_cl):
+        self.message_types[message_cl.get_message_type()] = message_cl
 
     def loads(self, data) -> Type[Message]:
         typename, content = Message.process(data)

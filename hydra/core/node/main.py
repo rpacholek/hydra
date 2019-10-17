@@ -8,8 +8,7 @@ class Main(metaclass=ABCMeta):
     def __init__(self, config, coromanager=NoneCoroManager()):
         self.config = config
         self.log = None
-        #self.env = Environment(config)
-        
+ 
         self.action_queue = get_factory(ActionQueue, config).create() 
         self.coromanager = coromanager
 
@@ -22,6 +21,7 @@ class Main(metaclass=ABCMeta):
     # TODO: Better name
     async def start_coro(self):
         for async_func, name in self.async_objects:
+            print(f"Run {name} {async_func}")
             coro = asyncio.create_task(async_func(coromanager=self.coromanager))
             self.coromanager.register(coro, name)
 

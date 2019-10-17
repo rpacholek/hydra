@@ -14,7 +14,7 @@ class BasicActionQueue(ActionExecutor, ActionQueue):
 
         self.register(self)
     
-    async def run(self):
+    async def run(self, coromanager=None):
         while True:
             action = await self.get_action()
             self.execute(action)

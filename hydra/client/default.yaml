@@ -1,0 +1,6 @@
+---
+supervisor:
+  port: 4003
+  host: 127.0.0.1
+action_queue:
+  type: Basic

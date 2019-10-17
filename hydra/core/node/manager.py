@@ -50,6 +50,7 @@ class NodeManager(ActionExecutor):
         await listener(self, self.config, coromanager)
 
     async def connect(self, *args, coromanager=NoneCoroManager(), **kwargs):
+        print("Launch connect")
         for _try in range(5):
             await connect(self, self.config, coromanager)
             await asyncio.sleep(10)

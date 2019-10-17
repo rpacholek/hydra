@@ -4,7 +4,7 @@ from ..common.serializer import Serializable
 from ..communication.network.message import Message
 
 class Action(Message):
-    def __init__(self, action_type=None, attachmants={}, content={}, **kwargs):
+    def __init__(self, action_type=None, attachments={}, content={}, **kwargs):
         self.action_type = action_type
         self.attachments = attachments
         self.dict = content
@@ -16,7 +16,7 @@ class Action(Message):
         self.attachments[name] = attachment
 
     def get_attachments(self):
-        return self.attachment
+        return self.attachments
 
     def get_attachment(self, name):
         return self.attachments[name]

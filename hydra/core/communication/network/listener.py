@@ -29,6 +29,7 @@ async def connect(manager, config={}, coromanager=None):
             config,
             requires=["host", "port"],
         )
+    print(f"Connecting {conn_config}")
     # TODO: host == "discover"
     # TODO: retry, increase timeout
     try:

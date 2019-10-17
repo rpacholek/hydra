@@ -13,7 +13,7 @@ class SupervisorManager(NodeManager):
     def get_class(self) -> Type[Node]:
         return SupervisorNode
 
-    @action_executor("event|")
+    @action_executor("event")
     def task_executor(self, action):
         action_type = action.get_type()
  

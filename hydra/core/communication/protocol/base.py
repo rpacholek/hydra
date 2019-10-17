@@ -27,7 +27,6 @@ class Protocol:
         self.send_buffer = []
 
     def init(self):
-        print("Init protocol")
         self.__step_iter = iter(self.steps)
         self.__next_step()
 
@@ -39,7 +38,6 @@ class Protocol:
 
     def receive(self, data):
         if self.stage:
-            print(data)
             self.stage.receive(ProtocolMessage().loads(data))
             
             if self.stage.status == ProtocolStatus.Failed:
@@ -62,14 +60,11 @@ class Protocol:
         return self.status == ProtocolStatus.Success
     
     def __next_step(self):
-        print("Next step")
         step = next(self.__step_iter, None)
         if step:
-            print(step)
             self.stage = step(self.send_buffer, self.info, self.local_env, self.remote_env, self.config)
             self.stage.init()
         else:
-            print("Protocol ended successfuly")
             self.status = ProtocolStatus.Success
 
 class ProtocolStep:
@@ -82,7 +77,6 @@ class ProtocolStep:
         self.status = ProtocolStatus.Waiting
 
     def send(self, data: Type[Message]):
-        print(data)
         self.send_buffer.append(data)
 
     def receive(self, message):

@@ -5,6 +5,9 @@ from ..action.executor import ActionExecutor
 from ..environment import RemoteEnvironment, NodeType
 
 from ..communication.protocol import AdvancedProtocol
+from ..communication.network.message import MessageProcessor
+from ..communication.protocol.message import ProtocolMessage
+from ..action.action import Action
 
 NodeStatus = Enum("NodeStatus", "Init Running Paused Stoped Failed Unknown")
 
@@ -28,6 +31,8 @@ class Node(ActionExecutor):
                 self.remote_env, 
                 self.config)
 
+        self.message_processor = MessageProcessor(Action, ProtocolMessage)
+
         self.status = NodeStatus.Init
 
     async def init(self):
@@ -38,7 +43,7 @@ class Node(ActionExecutor):
             print("Init")
             self.protocol.init()
             for s in self.protocol.get_send_content():
-                await self.device.send(s)
+                self.device.send(s)
 
             while not self.protocol.is_ready() and not self.protocol.has_failed():
                 print("Recv")
@@ -46,7 +51,7 @@ class Node(ActionExecutor):
                 if data:
                     self.protocol.receive(data)
                 for s in self.protocol.get_send_content():
-                    await self.device.send(s)
+                    self.device.send(s)
                 if not self.device.is_alive():
                     raise Exception("Connection closed")
 
@@ -63,12 +68,23 @@ class Node(ActionExecutor):
         self.status = NodeStatus.Running
 
         print("Start")
-        while True:
-            message = await self.device.recv()
-            # TODO: Process
+        while self.device.is_alive():
+            data = await self.device.recv()
+            self.process(data)
 
-    def process(self, message):
-        pass
+
+    def process(self, data):
+        if data:
+            message = self.message_processor.loads(data)
+            if message.get_message_type() == "action":
+                self.action_queue.push(message)
+            elif message.get_message_type() == "protocol":
+                pass
+            else:
+                print("Unknown message type")
+        else:
+            pass
+            #Empty data == closed stream?
 
     def close(self):
         self.device.close()

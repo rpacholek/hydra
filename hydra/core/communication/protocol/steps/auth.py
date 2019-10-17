@@ -8,7 +8,6 @@ class PlainAuth:
         pass
 
     def authenticate(self, *, user="", password="", **kwargs):
-        print(user, password)
         if user == "user" and password == "password":
             return True
         return False
@@ -39,15 +38,12 @@ class AuthenticationProtocol(ProtocolStep):
     def receive(self, message):
         info = message.get_info()
         if info["stage"] == "init":
-            print("Auth:init")
             if info["methods"] == "plain":
                 self.send(self.m_auth_user(info["methods"]))
                 self.remote_state = AuthStatus.Waiting
             else:
                 self.remote_state = AuthStatus.Success
         elif info["stage"] == "auth":
-            print("Auth:auth")
-            # TODO: Switch to walrus opertator whenever 3.8
             auth = self.authetication.get(info["method"])
             if auth and auth.authenticate(**info):
                 self.local_state = AuthStatus.Success
@@ -58,10 +54,8 @@ class AuthenticationProtocol(ProtocolStep):
         elif info["stage"] == "result":
             auth = "authenticated"
             if auth in info and info[auth]:
-                print("Auth:result:success")
                 self.remote_state = AuthStatus.Success
             else:
-                print("Auth:result:failed")
                 self.remote_state = AuthStatus.Failed
         self.try_ending()
 
