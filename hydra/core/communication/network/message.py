@@ -1,6 +1,4 @@
-import email.parser
-import email.generator
-import email.message
+from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
 from typing import Tuple, Type
@@ -12,6 +10,13 @@ class MessageException(Exception):
 
 
 class Message(metaclass=ABCMeta):
+    """
+    header: information required to e.g. route to correct subsystem
+        It is limited to carry only string values.
+    body: information that the message is carrying
+    attachments: lazy evaluated files that can be transported
+    """
+
     @abstractmethod
     def loads_message(self, header: dict, body: str, attachments: list):
         pass
@@ -22,31 +27,34 @@ class Message(metaclass=ABCMeta):
 
     @staticmethod
     @abstractmethod
-    def get_message_type():
+    def get_message_type() -> str:
         return "NoneType"
 
-    def dumps(self):
-        self.header, self.body, self.attachments = self.dumps_message()
-        self.header["type"] = self.get_message_type()
+    def dumps(self) -> bytes:
+        header, body, attachments = self.dumps_message()
+        header = header.copy()
+        header["type"] = self.get_message_type()
 
-        return self._encode()
+        return self._encode(header, body, attachments)
 
     @staticmethod
-    def process(data) -> Tuple[str, dict, str, list]:
+    def process(data: bytes) -> Tuple[str, dict, str, list]:
         header, body, attachments = Message._decode(data)
         typename = header.pop("type")
 
         return typename, header, body, attachments
 
-    def loads(self, data):
+    def loads(self, data: bytes) -> Type[Message]:
         processed = Message.process(data)
-        return self.loads_message(*processed[1:])
+        self.loads_message(*processed[1:])
+        return self
 
-    def _encode(self):
+    @staticmethod
+    def _encode(header, body, attachments):
         buf = BytesIO()
-        Message._encode_header(buf, self.header)
-        Message._encode_body(buf, self.body)
-        Message._encode_attachments(buf, self.attachments)
+        Message._encode_header(buf, header)
+        Message._encode_body(buf, body)
+        Message._encode_attachments(buf, attachments)
         buf.seek(0)
         return buf.read()
 
@@ -106,7 +114,7 @@ class MessageProcessor:
         self.message_types[message_cl.get_message_type()] = message_cl
 
     def loads(self, data) -> Type[Message]:
-        typename, content = Message.process(data)
+        typename, *content = Message.process(data)
 
         if typename in self.message_types:
             msg = self.message_types[typename]()

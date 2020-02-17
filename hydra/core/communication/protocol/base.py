@@ -80,11 +80,18 @@ class ProtocolStep:
         self.config = config
         self.status = ProtocolStatus.Waiting
 
-    def send(self, data: Type[Message]):
-        self.send_buffer.append(data)
+    def init(self):
+        """
+
+        """
 
     def receive(self, message):
-        return None
+        """
+
+        """
+
+    def send(self, data: Type[Message]):
+        self.send_buffer.append(data)
 
     def finish(self):
         self.status = ProtocolStatus.Success

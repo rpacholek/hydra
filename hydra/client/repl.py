@@ -15,6 +15,10 @@ class REPL:
         action_creator = ActionCreator()
         while True:
             input_data = await input("~> ")
+            if not input_data:
+                for task in asyncio.all_tasks():
+                    task.cancel()
+                break
             action = action_creator.parse(*input_data.split())
             if action:
                 self.action_queue.push_action(action)

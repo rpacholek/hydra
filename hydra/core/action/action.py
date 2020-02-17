@@ -1,4 +1,5 @@
 from typing import Tuple
+import json
 
 from ..common.serializer import Serializable
 from ..communication.network.message import Message
@@ -41,4 +42,4 @@ class Action(Message):
         return self
 
     def dumps_message(self) -> Tuple[dict, str, list]:
-        return {"action_type": self.action_type}, json.dumps(self.dict), attachments
+        return {"action_type": self.action_type}, json.dumps(self.dict), self.attachments

@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 
 import asyncio
+import logging
 
 from hydra.client import Client
 from hydra.core.common.init import *
 
+logging.basicConfig(level=logging.DEBUG)
 
 async def main():
     main_object = await init(Client)
     await run(main_object)
 
-asyncio.run(main())
+try:
+    asyncio.run(main())
+except asyncio.exceptions.CancelledError:
+    print("Exiting")

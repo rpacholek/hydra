@@ -33,4 +33,4 @@ def action_cmp(action_type: str, pattern: str):
     """
 
     #TODO: Impl
-    return action_type.starts_with(pattern)
+    return action_type.startswith(pattern)

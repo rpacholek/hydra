@@ -8,7 +8,7 @@ def options_error(category):
     return _er
 
 
-def options(var, category, *args):
+def options(var, category="help", *args):
     func = var.get(category, options_error(category))
     return func(*args)
 
@@ -17,15 +17,20 @@ class ActionCreator:
     def __init__(self):
         self._root = {
             "task": self.task,
+            "help": lambda *_: self.help(self._root),
         }
 
         self._task = {
             "create": self.task_create,
             "run": self.task_run,
+            "help": lambda *_: self.help(self._task),
         }
 
     def parse(self, *args):
         return options(self._root, *args)
+
+    def help(self, what):
+        print(f"Available commands: {', '.join(what.keys())}")
 
     def task(self, *args):
         return options(self._task, *args)

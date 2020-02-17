@@ -17,6 +17,8 @@ class NodeManager(ActionExecutor):
         self.config = config
         self.env = env
 
+        self.action_queue.register(self)
+
     def register(self, node):
         self.nodes[node.id] = node
 

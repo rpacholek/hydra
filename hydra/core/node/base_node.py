@@ -13,8 +13,8 @@ NodeStatus = Enum("NodeStatus", "Init Running Paused Stoped Failed Unknown")
 
 
 class Node(ActionExecutor):
-    def __init__(self, device, action_queue, config=None, env=None):
-        ActionExecutor.__init__(self)
+    def __init__(self, device, action_queue, config=None, env=None, **kwargs):
+        ActionExecutor.__init__(self, **kwargs)
 
         self.id = id(self)
 
@@ -77,7 +77,7 @@ class Node(ActionExecutor):
         if data:
             message = self.message_processor.loads(data)
             if message.get_message_type() == "action":
-                self.action_queue.push(message)
+                self.action_queue.push_action(message)
             elif message.get_message_type() == "protocol":
                 pass
             else:
@@ -88,7 +88,7 @@ class Node(ActionExecutor):
 
     def close(self):
         self.device.close()
-        self.action_queue.push(
+        self.action_queue.push_action(
             Action(
                 "event.node.closed",
                 nodeid=self.id
